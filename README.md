@@ -1,0 +1,122 @@
+# Mask2Former on VerSe: Vertebrae Segmentation
+
+This repository contains a robust refactoring of the **Mask2Former** architecture specifically fine-tuned for the **VerSe (Large Scale Vertebrae Segmentation Challenge)** dataset. 
+
+Our goal is to seamlessly bridge the gap between 3D medical imaging (CT scans) and state-of-the-art 2D panoptic/instance segmentation models by providing a complete pipeline: from 3D-to-2D preprocessing to training, evaluation, and visualization.
+
+---
+
+## 📌 Acknowledgements & Citations
+
+This project is built upon the incredible work of two distinct research efforts. If you use this repository, please ensure you cite the original authors:
+
+### 1. The VerSe Dataset
+The 3D CT data and original preprocessing concepts are derived from the VerSe project.
+* **Official Repo:** [https://github.com/anjany/verse](https://github.com/anjany/verse)
+* **Citation:** Sekuboyina A et al., *VerSe: A Vertebrae Labelling and Segmentation Benchmark for Multi-detector CT Images*, 2021. ([Paper](https://doi.org/10.1016/j.media.2021.102166))
+
+### 2. Mask2Former Architecture
+The core deep learning architecture and training loop are derived from Mask2Former.
+* **Official Repo:** [https://github.com/facebookresearch/Mask2Former](https://github.com/facebookresearch/Mask2Former)
+* **Citation:** Cheng, B., et al. *Masked-attention Mask and Universal Image Segmentation.* CVPR 2022.
+
+---
+
+## 📂 Folder Structure
+
+The repository is organized to separate data preprocessing from model training:
+
+```text
+verse/
+├── data/                      # Place your downloaded 3D VerSe raw nifti files here
+├── dataset_verse_2d/          # The output folder where 2D slices and JSON metadata are saved
+├── utils/                     # 3D-to-2D Preprocessing Pipeline
+│   ├── process_dataset.ipynb  # Main notebook to convert 3D NIfTI -> 2D PNGs + JSON
+│   ├── test_sample.ipynb      # Quick sandbox to test 2D conversion on a single subject
+│   └── sample/                # A single 3D subject used by test_sample.ipynb
+└── Mask2Former/               # The core Segmentation Framework
+    ├── configs/verse/         # Universal YAML configs (Instance, Panoptic, Semantic)
+    ├── mask2former/           # Model architecture and Universal Dataset Registration
+    ├── weights/               # Downloaded pre-trained weights (e.g., from COCO/ADE20k)
+    ├── results/               # Generated visualization outputs from scripts
+    └── visualization/         # Custom scripts to visualize predictions vs. Ground Truth
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Environment Setup
+We recommend using Python 3.8+ and PyTorch with CUDA support.
+
+```bash
+# Install Detectron2 (Ensure your PyTorch and CUDA versions match)
+python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
+
+# Install Mask2Former dependencies
+cd Mask2Former
+pip install -r requirements.txt
+
+# Compile Multi-Scale Deformable Attention (CUDA required)
+cd mask2former/modeling/pixel_decoder/ops
+sh make.sh
+```
+
+### 2. Data Preprocessing (3D to 2D)
+Before training, you must convert the 3D NIfTI volumes into 2D slices.
+1. Download the VerSe dataset and place it in the `data/` folder.
+2. Open `utils/test_sample.ipynb` to verify the bone windowing and slice extraction works on your machine.
+3. Run `utils/process_dataset.ipynb` to process the entire dataset. This will populate the `dataset_verse_2d/` directory with images and `verse_[split]_metadata.json` files.
+
+### 3. Model Configuration & Weights
+The configuration files are located in `Mask2Former/configs/verse/`. They are set up to use a ResNet-50 backbone by default.
+1. Download a pre-trained weight file from the original [Mask2Former Model Zoo](https://github.com/facebookresearch/Mask2Former/blob/main/MODEL_ZOO.md) (e.g., an ADE20k or COCO model).
+2. Place it in `Mask2Former/weights/` and rename it appropriately (e.g., `ade20k_panoptic_R50.pkl`).
+3. Ensure the `MODEL.WEIGHTS` path in your chosen config file (`verse_panoptic_R50.yaml`) points to this file.
+
+---
+
+## 🏃‍♂️ Training & Evaluation
+
+### Training
+Navigate to the `Mask2Former` directory and run the training script. Detectron2 handles the universal registration dynamically based on your VerSe metadata.
+
+```bash
+cd Mask2Former
+python train_net.py --num-gpus 1 \
+  --config-file configs/verse/verse_panoptic_R50.yaml
+```
+
+### Evaluation
+To evaluate a trained model, append the `--eval-only` flag and point to your trained weights:
+
+```bash
+python train_net.py --num-gpus 1 \
+  --config-file configs/verse/verse_panoptic_R50.yaml \
+  --eval-only MODEL.WEIGHTS output/verse_panoptic_R50/model_final.pth
+```
+
+---
+
+## 👁️ Visualization
+
+We provide robust, command-line friendly visualization tools specifically tailored for the VerSe dataset. These scripts automatically compare your model's predictions side-by-side with the manual Ground Truth annotations.
+
+Run these from the `Mask2Former` directory:
+
+**Instance Segmentation:**
+```bash
+python visualization/visualize_instance.py --config configs/verse/verse_instance_R50.yaml
+```
+
+**Panoptic Segmentation:**
+```bash
+python visualization/visualize_panoptic.py --config configs/verse/verse_panoptic_R50.yaml
+```
+
+**Semantic Segmentation:**
+```bash
+python visualization/visualize_semantic.py --config configs/verse/verse_semantic_R50.yaml
+```
+
+*Note: Running the script without arguments will pick a random image from your test set. You can specify a specific image using `--input path/to/image.png`.* Results are automatically saved to `Mask2Former/results/`.
