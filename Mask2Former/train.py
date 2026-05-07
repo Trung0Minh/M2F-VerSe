@@ -50,8 +50,6 @@ from detectron2.utils.logger import setup_logger
 
 # MaskFormer
 from mask2former import (
-    COCOInstanceNewBaselineDatasetMapper,
-    COCOPanopticNewBaselineDatasetMapper,
     InstanceSegEvaluator,
     MaskFormerInstanceDatasetMapper,
     MaskFormerPanopticDatasetMapper,
@@ -60,18 +58,8 @@ from mask2former import (
     add_maskformer2_config,
 )
 
-# Granular Refactor: Automatically import all dataset registrations
-import importlib
-from pathlib import Path
-
-def _register_all_datasets():
-    datasets_dir = Path(__file__).parent / "mask2former" / "data" / "datasets"
-    for file in datasets_dir.glob("*.py"):
-        if file.name != "__init__.py":
-            module_name = f"mask2former.data.datasets.{file.stem}"
-            importlib.import_module(module_name)
-
-_register_all_datasets()
+# Config-driven dataset registration
+from mask2former.data.datasets.register_dataset import register_all_verse_datasets
 
 
 class Trainer(DefaultTrainer):
@@ -117,8 +105,6 @@ class Trainer(DefaultTrainer):
             "mask_former_semantic": MaskFormerSemanticDatasetMapper,
             "mask_former_panoptic": MaskFormerPanopticDatasetMapper,
             "mask_former_instance": MaskFormerInstanceDatasetMapper,
-            "coco_instance_lsj": COCOInstanceNewBaselineDatasetMapper,
-            "coco_panoptic_lsj": COCOPanopticNewBaselineDatasetMapper,
         }
         
         mapper_cls = mapper_map.get(mapper_name, None)
@@ -243,6 +229,11 @@ def setup(args):
     cfg.merge_from_list(args.opts)
     cfg.freeze()
     default_setup(cfg, args)
+    
+    # Config-driven VerSe registration
+    if cfg.DATASETS.VERSE_ROOT:
+        register_all_verse_datasets(cfg.DATASETS.VERSE_ROOT)
+
     # Setup logger for "mask_former" module
     setup_logger(output=cfg.OUTPUT_DIR, distributed_rank=comm.get_rank(), name="mask2former")
     return cfg

@@ -6,6 +6,7 @@ MODEL:
 DATASETS:
   TRAIN: ("verse_panoptic_train",)
   TEST: ("verse_panoptic_val",)
+  VERSE_ROOT: "../dataset_verse_2d/ade20k"
 SOLVER:
   IMS_PER_BATCH: 4
   BASE_LR: 0.0001
