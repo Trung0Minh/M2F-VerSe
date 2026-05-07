@@ -27,9 +27,9 @@ The core deep learning architecture and training loop are derived from Mask2Form
 The repository is organized to separate data preprocessing from model training:
 
 ```text
-verse/
+M2F-VerSe/
 ├── data/                      # Place your downloaded 3D VerSe raw nifti files here
-├── dataset_verse_2d/          # The output folder where 2D slices and JSON metadata are saved
+├── dataset_verse_2d/          # The output folder where 2D slices and JSON metadata are saved after processing
 ├── utils/                     # 3D-to-2D Preprocessing Pipeline
 │   ├── process_dataset.ipynb  # Main notebook to convert 3D NIfTI -> 2D PNGs + JSON
 │   ├── test_sample.ipynb      # Quick sandbox to test 2D conversion on a single subject
@@ -64,9 +64,26 @@ sh make.sh
 
 ### 2. Data Preprocessing (3D to 2D)
 Before training, you must convert the 3D NIfTI volumes into 2D slices.
-1. Download the VerSe dataset and place it in the `data/` folder.
-2. Open `utils/test_sample.ipynb` to verify the bone windowing and slice extraction works on your machine.
-3. Run `utils/process_dataset.ipynb` to process the entire dataset. This will populate the `dataset_verse_2d/` directory with images and `verse_[split]_metadata.json` files.
+
+1. **Download & Restructure the Dataset:**
+   - Download the raw VerSe dataset from this [Google Drive link](https://drive.google.com/drive/folders/1HkjTonPx4Ei4YRDBKHYWG-SF9gevr6w_?usp=drive_link).
+   - The original dataset does not follow the required structure, so you **must** manually restructure it into the `data/` folder as follows for the preprocessing scripts to work:
+     ```text
+     data/
+     ├── train/
+     │   ├── derivatives/
+     │   └── rawdata/
+     ├── val/
+     │   ├── derivatives/
+     │   └── rawdata/
+     └── test/
+         ├── derivatives/
+         └── rawdata/
+     ```
+     *Note: Each subject folder (e.g., `sub-verse500`) should be placed inside its respective `rawdata` (for CT scans) or `derivatives` (for segmentation masks) subfolder.*
+
+2. **Verify Conversion:** Open `utils/test_sample.ipynb` to verify the bone windowing and slice extraction works on your machine with a sample subject.
+3. **Run Pipeline:** Execute `utils/process_dataset.ipynb` to process the entire dataset. This will populate the `dataset_verse_2d/` directory with images and `verse_[split]_metadata.json` files.
 
 ### 3. Model Configuration & Weights
 The configuration files are located in `Mask2Former/configs/verse/`. They are set up to use a ResNet-50 backbone by default.
