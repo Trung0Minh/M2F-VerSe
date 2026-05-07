@@ -56,11 +56,29 @@ python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
 # Install Mask2Former dependencies
 cd Mask2Former
 pip install -r requirements.txt
-
-# Compile Multi-Scale Deformable Attention (CUDA required)
-cd mask2former/modeling/pixel_decoder/ops
-sh make.sh
 ```
+
+#### 🛠️ Compiling CUDA Operators (Required)
+Mask2Former uses custom CUDA operators for Multi-Scale Deformable Attention. **This step must succeed before training.**
+
+To avoid "Version Mismatch" or "Undefined Symbol" errors, follow these steps:
+1.  **Align CUDA Versions:** Ensure your system's `nvcc` version matches your PyTorch CUDA version.
+    ```bash
+    nvcc --version
+    python -c "import torch; print(torch.version.cuda)"
+    ```
+2.  **Set Environment Variables:**
+    ```bash
+    export CUDA_HOME=/usr/local/cuda  # Path to your matching CUDA toolkit
+    export PATH=$CUDA_HOME/bin:$PATH
+    export FORCE_CUDA=1
+    ```
+3.  **Compile:**
+    ```bash
+    cd mask2former/modeling/pixel_decoder/ops
+    rm -rf build *.egg-info  # Always start with a clean build
+    sh make.sh
+    ```
 
 ### 2. Data Preprocessing (3D to 2D)
 Before training, you must convert the 3D NIfTI volumes into 2D slices.
@@ -88,19 +106,22 @@ Before training, you must convert the 3D NIfTI volumes into 2D slices.
 ### 3. Model Configuration & Weights
 The configuration files are located in `Mask2Former/configs/verse/`. They are set up to use a ResNet-50 backbone by default.
 1. Download a pre-trained weight file from the original [Mask2Former Model Zoo](https://github.com/facebookresearch/Mask2Former/blob/main/MODEL_ZOO.md) (e.g., an ADE20k or COCO model).
-2. Place it in `Mask2Former/weights/` and rename it appropriately (e.g., `ade20k_panoptic_R50.pkl`).
-3. Ensure the `MODEL.WEIGHTS` path in your chosen config file (`verse_panoptic_R50.yaml`) points to this file.
+2. Place it in `Mask2Former/weights/`. 
+3. **Custom Backbones (Optional):** If you use a different backbone (e.g., Swin Transformer):
+   - **Weight Conversion:** Convert official `.pth` weights to `.pkl` using `python tools/convert-pretrained-swin-model-to-d2.py path/to/model.pth weights/model.pkl`.
+   - **Architecture Matching:** Ensure your YAML config parameters (`EMBED_DIM`, `DEPTHS`, etc.) precisely match the architecture of the backbone you downloaded.
+4. Ensure the `MODEL.WEIGHTS` path in your chosen config file (`verse_panoptic_R50.yaml`) points to your weight file.
 
 ---
 
 ## 🏃‍♂️ Training & Evaluation
 
 ### Training
-Navigate to the `Mask2Former` directory and run the training script. Detectron2 handles the universal registration dynamically based on your VerSe metadata.
+Navigate to the `Mask2Former` directory and run the training script. Detectron2 handles the universal registration dynamically based on the `DATASETS.VERSE_ROOT` path in your YAML.
 
 ```bash
 cd Mask2Former
-python train_net.py --num-gpus 1 \
+python train.py --num-gpus 1 \
   --config-file configs/verse/verse_panoptic_R50.yaml
 ```
 
@@ -108,7 +129,7 @@ python train_net.py --num-gpus 1 \
 To evaluate a trained model, append the `--eval-only` flag and point to your trained weights:
 
 ```bash
-python train_net.py --num-gpus 1 \
+python train.py --num-gpus 1 \
   --config-file configs/verse/verse_panoptic_R50.yaml \
   --eval-only MODEL.WEIGHTS output/verse_panoptic_R50/model_final.pth
 ```
@@ -137,3 +158,14 @@ python visualization/visualize_semantic.py --config configs/verse/verse_semantic
 ```
 
 *Note: Running the script without arguments will pick a random image from your test set. You can specify a specific image using `--input path/to/image.png`.* Results are automatically saved to `Mask2Former/results/`.
+
+---
+
+## 💡 Pro-Tips & Troubleshooting
+
+*   **CUDA Compilation Failed?** See the **🛠️ Compiling CUDA Operators** section above. The #1 cause is a version mismatch between `nvcc` and `torch.version.cuda`.
+*   **Out of Memory (OOM)?** Mask2Former is memory-intensive. If you get a "CUDA out of memory" error:
+    1.  Reduce `SOLVER.IMS_PER_BATCH` in your YAML config (e.g., change from 16 to 2 or 1).
+    2.  Reduce `INPUT.IMAGE_SIZE` (e.g., from 1024 to 512).
+*   **Dataset Not Found?** Registration is now dynamic! Check the `VERSE_ROOT` path inside your YAML config. It must point to the folder containing your processed 2D slices (usually `../dataset_verse_2d/ade20k`).
+*   **Bone Windowing:** Our preprocessing script applies a specific bone window (Hounsfield Units). If your visualizations look "washed out" or completely black, verify the windowing settings in `utils/data_utilities.py`.
