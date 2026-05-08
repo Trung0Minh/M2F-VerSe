@@ -40,6 +40,10 @@ if __name__ == "__main__":
     cfg.MODEL.PANOPTIC_FPN.COMBINE.INSTANCES_CONFIDENCE_THRESH = args.conf_threshold
     cfg.freeze()
 
+    # 1.1 Register Dataset
+    if cfg.DATASETS.VERSE_ROOT:
+        mask2former.data.datasets.register_dataset.register_all_verse_datasets(cfg.DATASETS.VERSE_ROOT)
+
     print(f"Loading instance model with weights: {cfg.MODEL.WEIGHTS}")
     predictor = DefaultPredictor(cfg)
     metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0] if cfg.DATASETS.TEST else "verse_instance_test")

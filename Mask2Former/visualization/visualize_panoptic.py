@@ -39,6 +39,10 @@ if __name__ == "__main__":
     cfg.MODEL.DEVICE = args.device
     cfg.freeze()
 
+    # 1.1 Register Dataset
+    if cfg.DATASETS.VERSE_ROOT:
+        mask2former.data.datasets.register_dataset.register_all_verse_datasets(cfg.DATASETS.VERSE_ROOT)
+
     print(f"Loading panoptic model with weights: {cfg.MODEL.WEIGHTS}")
     predictor = DefaultPredictor(cfg)
     metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0] if cfg.DATASETS.TEST else "verse_panoptic_test")

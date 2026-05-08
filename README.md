@@ -47,14 +47,20 @@ M2F-VerSe/
 ## 🚀 Getting Started
 
 ### 1. Environment Setup
-We recommend using Python 3.8+ and PyTorch with CUDA support.
+We recommend using Python 3.10+ and PyTorch with CUDA support.
 
 ```bash
-# Install Detectron2 (Ensure your PyTorch and CUDA versions match)
-python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
+# Install PyTorch (Modify to match your CUDA version)
+# See: https://pytorch.org/get-started/locally/
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# Install Mask2Former dependencies
-cd Mask2Former
+# Install Detectron2 (Requires PyTorch to be installed first)
+python -m pip install 'git+https://github.com/facebookresearch/detectron2.git' --no-build-isolation
+
+# Install PanopticAPI
+python -m pip install 'git+https://github.com/cocodataset/panopticapi.git'
+
+# Install project dependencies
 pip install -r requirements.txt
 ```
 
@@ -75,7 +81,7 @@ To avoid "Version Mismatch" or "Undefined Symbol" errors, follow these steps:
     ```
 3.  **Compile:**
     ```bash
-    cd mask2former/modeling/pixel_decoder/ops
+    cd Mask2Former/mask2former/modeling/pixel_decoder/ops
     rm -rf build *.egg-info  # Always start with a clean build
     sh make.sh
     ```
@@ -100,13 +106,19 @@ Before training, you must convert the 3D NIfTI volumes into 2D slices.
      ```
      *Note: Each subject folder (e.g., `sub-verse500`) should be placed inside its respective `rawdata` (for CT scans) or `derivatives` (for segmentation masks) subfolder.*
 
-2. **Verify Conversion:** Open `utils/test_sample.ipynb` to verify the bone windowing and slice extraction works on your machine with a sample subject.
-3. **Run Pipeline:** Execute `utils/process_dataset.ipynb` to process the entire dataset. This will populate the `dataset_verse_2d/` directory with images and `verse_[split]_metadata.json` files.
+2. **Run Pipeline:** Open a terminal and launch Jupyter:
+   ```bash
+   jupyter notebook
+   ```
+   Execute `utils/process_dataset.ipynb` to process the entire dataset. 
+   - **Important:** By default, the notebook uses `EXPORT_STYLE = 'ade20k'`, which populates the `dataset_verse_2d/ade20k/` directory. If you change this style, ensure your YAML configs match the new path.
+3. **Verify Conversion:** You can use `utils/test_sample.ipynb` to verify the bone windowing and slice extraction on a sample subject.
 
 ### 3. Model Configuration & Weights
 The configuration files are located in `Mask2Former/configs/verse/`. They are set up to use a ResNet-50 backbone by default.
-1. Download a pre-trained weight file from the original [Mask2Former Model Zoo](https://github.com/facebookresearch/Mask2Former/blob/main/MODEL_ZOO.md) (e.g., an ADE20k or COCO model).
-2. Place it in `Mask2Former/weights/`. 
+1. Download pre-trained weights from the [Mask2Former Model Zoo](https://github.com/facebookresearch/Mask2Former/blob/main/MODEL_ZOO.md).
+2. Place them in `Mask2Former/weights/`. 
+   - For `verse_panoptic_R50.yaml`, ensure the file is named `ade20k_panoptic_R50.pkl` (or update the `MODEL.WEIGHTS` path in the YAML).
 3. **Custom Backbones (Optional):** If you use a different backbone (e.g., Swin Transformer):
    - **Weight Conversion:** Convert official `.pth` weights to `.pkl` using `python tools/convert-pretrained-swin-model-to-d2.py path/to/model.pth weights/model.pkl`.
    - **Architecture Matching:** Ensure your YAML config parameters (`EMBED_DIM`, `DEPTHS`, etc.) precisely match the architecture of the backbone you downloaded.
