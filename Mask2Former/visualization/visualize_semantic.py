@@ -1,10 +1,15 @@
 import os
+import sys
 import torch
 import numpy as np
 import argparse
 import random
 from PIL import Image
 import matplotlib.pyplot as plt
+
+# Add the parent directory to sys.path to allow importing mask2former
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 from detectron2.projects.deeplab import add_deeplab_config
@@ -15,10 +20,10 @@ import mask2former.data.datasets.register_dataset
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Visualize Mask2Former Semantic Segmentation on VerSe")
-    parser.add_argument("--config", default="configs/verse/verse_semantic_R50.yaml", help="path to config file")
-    parser.add_argument("--weights", default="output/verse_semantic_R50/model_final.pth", help="path to trained weights")
+    parser.add_argument("--config", default="configs/verse/verse_ade20k_semantic_R50.yaml", help="path to config file")
+    parser.add_argument("--weights", default="output/verse_ade20k_semantic_R50/model_final.pth", help="path to trained weights")
     parser.add_argument("--input", help="path to a single input image. If empty, picks a random test image.")
-    parser.add_argument("--output", default="results/verse_semantic_R50_result.png", help="output image path")
+    parser.add_argument("--output", default="results/verse_ade20k_semantic_R50_result.png", help="output image path")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu", help="device to run model on")
     return parser
 
@@ -67,26 +72,31 @@ if __name__ == "__main__":
 
     # 5. Plotting
     num_panels = 3 if has_gt else 2
-    fig, ax = plt.subplots(1, num_panels, figsize=(6 * num_panels, 7))
+    fig, ax = plt.subplots(1, num_panels, figsize=(8 * num_panels, 10))
 
     ax[0].imshow(img_rgb)
-    ax[0].set_title(f"Input: {sample_name}")
+    ax[0].set_title(f"Input: {sample_name}", fontsize=15)
 
     custom_cmap = ListedColormap(['black', 'red', 'green', 'blue'])
+    # For overlay, we want background (0) to be transparent
+    overlay_cmap = ListedColormap(['none', 'red', 'green', 'blue'])
+    
     labels = ['Background', 'Cervical', 'Thoracic', 'Lumbar']
     colors = ['black', 'red', 'green', 'blue']
     patches = [mpatches.Patch(color=colors[i], label=labels[i]) for i in range(len(labels))]
 
     if has_gt:
-        ax[1].imshow(gt, cmap=custom_cmap, vmin=0, vmax=3)
-        ax[1].set_title("Ground Truth (Manual)")
+        ax[1].imshow(img_rgb)
+        ax[1].imshow(gt, cmap=overlay_cmap, vmin=0, vmax=3, alpha=0.5)
+        ax[1].set_title("Ground Truth (Manual)", fontsize=15)
         pred_ax = ax[2]
     else:
         pred_ax = ax[1]
 
-    pred_ax.imshow(prediction, cmap=custom_cmap, vmin=0, vmax=3)
-    pred_ax.set_title("Model Prediction")
-    pred_ax.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc='upper left')
+    pred_ax.imshow(img_rgb)
+    pred_ax.imshow(prediction, cmap=overlay_cmap, vmin=0, vmax=3, alpha=0.5)
+    pred_ax.set_title("Model Prediction", fontsize=15)
+    pred_ax.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=12)
 
     for a in ax: a.axis('off')
     plt.tight_layout()
@@ -94,4 +104,3 @@ if __name__ == "__main__":
     plt.savefig(args.output)
     print(f"Success! Result saved as '{args.output}'")
     plt.show()
-

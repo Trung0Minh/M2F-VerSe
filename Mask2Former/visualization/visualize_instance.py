@@ -1,10 +1,15 @@
 import os
+import sys
 import torch
 import numpy as np
 import argparse
 import random
 from PIL import Image
 import matplotlib.pyplot as plt
+
+# Add the parent directory to sys.path to allow importing mask2former
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 from detectron2.data import MetadataCatalog
@@ -17,10 +22,10 @@ import mask2former.data.datasets.register_dataset
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Visualize Mask2Former Instance Segmentation on VerSe")
-    parser.add_argument("--config", default="configs/verse/verse_instance_R50.yaml", help="path to config file")
-    parser.add_argument("--weights", default="output/verse_instance_R50/model_final.pth", help="path to trained weights")
+    parser.add_argument("--config", default="configs/verse/verse_ade20k_instance_R50.yaml", help="path to config file")
+    parser.add_argument("--weights", default="output/verse_ade20k_instance_R50/model_final.pth", help="path to trained weights")
     parser.add_argument("--input", help="path to a single input image. If empty, picks a random test image.")
-    parser.add_argument("--output", default="results/verse_instance_R50_result.png", help="output image path")
+    parser.add_argument("--output", default="results/verse_ade20k_instance_R50_result.png", help="output image path")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu", help="device to run model on")
     parser.add_argument("--conf-threshold", type=float, default=0.5, help="confidence threshold")
     return parser
@@ -129,4 +134,3 @@ if __name__ == "__main__":
     plt.savefig(args.output)
     print(f"Success! Result saved as '{args.output}'")
     plt.show()
-

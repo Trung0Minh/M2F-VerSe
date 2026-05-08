@@ -68,11 +68,31 @@ pip install -r requirements.txt
 Mask2Former uses custom CUDA operators for Multi-Scale Deformable Attention. **This step must succeed before training.**
 
 To avoid "Version Mismatch" or "Undefined Symbol" errors, follow these steps:
-1.  **Align CUDA Versions:** Ensure your system's `nvcc` version matches your PyTorch CUDA version.
+1.  **Align CUDA Versions:** Your system's `nvcc` version **MUST** match your PyTorch CUDA version (e.g., if you installed PyTorch for CUDA 12.1, you need CUDA Toolkit 12.1).
     ```bash
     nvcc --version
     python -c "import torch; print(torch.version.cuda)"
     ```
+
+**For Conda Users (Recommended if you lack system-wide CUDA/GCC):**
+If you have version mismatches or lack a compatible compiler (CUDA 12.1 needs **GCC 12** or lower), you can install them directly into your environment:
+```bash
+# Install compatible CUDA 12.1 Toolkit and GCC 12
+conda install -c nvidia cuda-toolkit=12.1 cuda-nvcc=12.1 cuda-cccl=12.1 \
+    libcusparse-dev=12.1 libcublas-dev=12.1 libcufft-dev=11.0 \
+    libcurand-dev=10.3 libcusolver-dev=11.4 -y
+conda install -c conda-forge gcc_linux-64=12 gxx_linux-64=12 -y
+
+# Set path and compile (Conda paths are now auto-detected by setup.py)
+export CUDA_HOME=$CONDA_PREFIX
+export PATH=$CUDA_HOME/bin:$PATH
+export FORCE_CUDA=1
+cd Mask2Former/mask2former/modeling/pixel_decoder/ops
+rm -rf build *.egg-info
+sh make.sh
+```
+
+**Standard Compilation:**
 2.  **Set Environment Variables:**
     ```bash
     export CUDA_HOME=/usr/local/cuda  # Path to your matching CUDA toolkit
@@ -97,12 +117,12 @@ Before training, you must convert the 3D NIfTI volumes into 2D slices.
      ├── train/
      │   ├── derivatives/
      │   └── rawdata/
-     ├── val/
-     │   ├── derivatives/
-     │   └── rawdata/
-     └── test/
-         ├── derivatives/
-         └── rawdata/
+     ├── val/                                                                                 
+     │   ├── derivatives/                                                                     
+     │   └── rawdata/                                                                         
+     └── test/                                                                                
+         ├── derivatives/                                                                     
+         └── rawdata/                                                                         
      ```
      *Note: Each subject folder (e.g., `sub-verse500`) should be placed inside its respective `rawdata` (for CT scans) or `derivatives` (for segmentation masks) subfolder.*
 
@@ -176,6 +196,7 @@ python visualization/visualize_semantic.py --config configs/verse/verse_semantic
 ## 💡 Pro-Tips & Troubleshooting
 
 *   **CUDA Compilation Failed?** See the **🛠️ Compiling CUDA Operators** section above. The #1 cause is a version mismatch between `nvcc` and `torch.version.cuda`.
+    *   **Conda Users:** Conda paths are now auto-detected! Just ensure you follow the installation command in section 1 to install the required `cuda-toolkit` and `gcc` packages.
 *   **Out of Memory (OOM)?** Mask2Former is memory-intensive. If you get a "CUDA out of memory" error:
     1.  Reduce `SOLVER.IMS_PER_BATCH` in your YAML config (e.g., change from 16 to 2 or 1).
     2.  Reduce `INPUT.IMAGE_SIZE` (e.g., from 1024 to 512).

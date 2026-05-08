@@ -23,6 +23,25 @@ from setuptools import setup
 
 requirements = ["torch", "torchvision"]
 
+def get_conda_cuda_paths():
+    """Scan for Conda-specific CUDA targets directory structure."""
+    include_dirs = []
+    library_dirs = []
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix:
+        targets_dir = os.path.join(conda_prefix, "targets")
+        if os.path.exists(targets_dir):
+            for arch_dir in os.listdir(targets_dir):
+                if arch_dir.endswith("-linux"):
+                    path = os.path.join(targets_dir, arch_dir)
+                    inc = os.path.join(path, "include")
+                    lib = os.path.join(path, "lib")
+                    if os.path.exists(inc):
+                        include_dirs.append(inc)
+                    if os.path.exists(lib):
+                        library_dirs.append(lib)
+    return include_dirs, library_dirs
+
 def get_extensions():
     this_dir = os.path.dirname(os.path.abspath(__file__))
     extensions_dir = os.path.join(this_dir, "src")
@@ -35,6 +54,14 @@ def get_extensions():
     extension = CppExtension
     extra_compile_args = {"cxx": []}
     define_macros = []
+    
+    include_dirs = [extensions_dir]
+    library_dirs = []
+
+    # Conda-specific path automation to ensure "smooth setup" for users
+    conda_inc, conda_lib = get_conda_cuda_paths()
+    include_dirs.extend(conda_inc)
+    library_dirs.extend(conda_lib)
 
     # Force cuda since torch ask for a device, not if cuda is in fact available.
     if (os.environ.get('FORCE_CUDA') or torch.cuda.is_available()) and CUDA_HOME is not None:
@@ -54,12 +81,12 @@ def get_extensions():
             raise NotImplementedError('No CUDA runtime is found. Please set FORCE_CUDA=1 or test it by running torch.cuda.is_available().')
 
     sources = [os.path.join(extensions_dir, s) for s in sources]
-    include_dirs = [extensions_dir]
     ext_modules = [
         extension(
             "MultiScaleDeformableAttention",
             sources,
             include_dirs=include_dirs,
+            library_dirs=library_dirs,
             define_macros=define_macros,
             extra_compile_args=extra_compile_args,
         )

@@ -105,6 +105,9 @@ class Trainer(DefaultTrainer):
             "mask_former_semantic": MaskFormerSemanticDatasetMapper,
             "mask_former_panoptic": MaskFormerPanopticDatasetMapper,
             "mask_former_instance": MaskFormerInstanceDatasetMapper,
+            # Handle COCO-style LSJ mapper names that might be in configs
+            "coco_instance_lsj": MaskFormerInstanceDatasetMapper,
+            "coco_panoptic_lsj": MaskFormerPanopticDatasetMapper,
         }
         
         mapper_cls = mapper_map.get(mapper_name, None)

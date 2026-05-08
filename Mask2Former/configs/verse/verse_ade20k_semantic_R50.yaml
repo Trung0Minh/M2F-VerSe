@@ -14,4 +14,4 @@ SOLVER:
   CHECKPOINT_PERIOD: 5000
 TEST:
   EVAL_PERIOD: 5000
-OUTPUT_DIR: "./output/verse_semantic_R50"
+OUTPUT_DIR: "./output/verse_ade20k_semantic_R50"
