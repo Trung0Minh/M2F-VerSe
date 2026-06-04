@@ -1,0 +1,17 @@
+_BASE_: "../ade20k/semantic-segmentation/swin/maskformer2_swin_tiny_bs16_160k.yaml"
+MODEL:
+  WEIGHTS: "weights/ade20k_semantic_swin_tiny.pkl"
+  SEM_SEG_HEAD:
+    NUM_CLASSES: 4 # Background + Cervical, Thoracic, Lumbar
+DATASETS:
+  TRAIN: ("verse_semantic_train",)
+  TEST: ("verse_semantic_val",)
+  VERSE_ROOT: "../dataset_verse_2d/ade20k"
+SOLVER:
+  IMS_PER_BATCH: 4
+  BASE_LR: 0.0001
+  MAX_ITER: 20000
+  CHECKPOINT_PERIOD: 20000
+TEST:
+  EVAL_PERIOD: 0
+OUTPUT_DIR: "./output/verse_ade20k_semantic_swin_t"

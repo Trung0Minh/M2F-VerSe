@@ -133,11 +133,29 @@ dmypy.json
 # files system outliers
 .DS*
 
+# Local agent/tooling metadata
+.agents/
+.codex/
+.codegraph/
+
 # Mask2Former Documentation and Original Files
-Mask2Former/*.md
-Mask2Former/tools/*.md
-Mask2Former/cog.yaml
-Mask2Former/requirements.txt
+#Mask2Former/*.md
+#Mask2Former/tools/*.md
+#Mask2Former/cog.yaml
+#Mask2Former/requirements.txt
 
 data/
 dataset_verse_2d/
+
+# Model weights, checkpoints, and generated inference/training artifacts
+*.pth
+*.pkl
+*.json.lock
+events.out.tfevents*
+source/**/weights/
+source/**/temp/
+source/**/output/
+source/**/outputs/
+weights/
+output/
+outputs/

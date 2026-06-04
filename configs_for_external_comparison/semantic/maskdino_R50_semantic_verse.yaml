@@ -1,0 +1,27 @@
+_BASE_: "../ade20k/semantic-segmentation/maskdino_R50_bs16_160k_steplr.yaml"
+MODEL:
+  WEIGHTS: "../../Mask2Former/weights/ade20k_semantic_R50.pkl"
+  SEM_SEG_HEAD:
+    NUM_CLASSES: 4 # Background + 3 Regions (cervical, thoracic, lumbar)
+  MaskDINO:
+    NUM_OBJECT_QUERIES: 100
+DATASETS:
+  TRAIN: ("verse_semantic_train",)
+  TEST: ("verse_semantic_val",)
+  VERSE_ROOT: "../../dataset_verse_2d/ade20k"
+INPUT:
+  IMAGE_SIZE: 512
+  MIN_SIZE_TRAIN: (512,)
+  MAX_SIZE_TRAIN: 512
+  MIN_SIZE_TEST: 512
+SOLVER:
+  IMS_PER_BATCH: 2 # Reduced to 2 to prevent OOM and maintain fairness
+  BASE_LR: 0.0001
+  MAX_ITER: 20000
+  WARMUP_ITERS: 1000
+  CHECKPOINT_PERIOD: 5000
+  AMP:
+    ENABLED: False # Disable AMP for numerical stability (Fixes 'invalid numeric entries' NaN error)
+TEST:
+  EVAL_PERIOD: 5000
+OUTPUT_DIR: "./output/verse_semantic_R50"

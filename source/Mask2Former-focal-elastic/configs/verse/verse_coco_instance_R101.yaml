@@ -1,0 +1,17 @@
+_BASE_: "../coco/instance-segmentation/maskformer2_R101_bs16_50ep.yaml"
+MODEL:
+  WEIGHTS: "weights/coco_instance_R101.pkl"
+  SEM_SEG_HEAD:
+    NUM_CLASSES: 28 # All 28 vertebrae as separate "Things"
+DATASETS:
+  TRAIN: ("verse_instance_train",)
+  TEST: ("verse_instance_val",)
+  VERSE_ROOT: "../dataset_verse_2d/coco"
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.0001
+  MAX_ITER: 20000
+  CHECKPOINT_PERIOD: 5000
+TEST:
+  EVAL_PERIOD: 5000
+OUTPUT_DIR: "./output/verse_coco_instance_R101"
