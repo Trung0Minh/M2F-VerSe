@@ -14,6 +14,24 @@ Large datasets, pretrained initialization weights, and trained checkpoints are n
 
 This repository does not include external model source trees such as MMDetection, MMSegmentation, or MaskDINO. Those are used from their official repositories.
 
+## Acknowledgements and Citations
+
+This project is a refactoring and adaptation built mainly from two upstream works.
+
+### VerSe Dataset
+
+The 3D CT data and vertebrae annotations come from the VerSe benchmark.
+
+- Official repository: <https://github.com/anjany/verse>
+- Paper: Sekuboyina A. et al., "VerSe: A Vertebrae Labelling and Segmentation Benchmark for Multi-detector CT Images", Medical Image Analysis, 2021.
+
+### Mask2Former
+
+The baseline architecture, training framework, and Detectron2-style implementation are adapted from Mask2Former.
+
+- Official repository: <https://github.com/facebookresearch/Mask2Former>
+- Paper: Cheng B. et al., "Masked-attention Mask Transformer for Universal Image Segmentation", CVPR, 2022.
+
 ## Repository Tree
 
 ```text
