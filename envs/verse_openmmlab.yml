@@ -1,4 +1,4 @@
-name: verse_mm
+name: verse_openmmlab
 channels:
   - nvidia/label/cuda-12.4.1
   - nvidia

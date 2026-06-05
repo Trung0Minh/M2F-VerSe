@@ -1,4 +1,4 @@
-name: tgmt
+name: verse_detectron2
 channels:
   - nvidia/label/cuda-12.4.1
   - nvidia
