@@ -20,6 +20,18 @@ dataset_verse_2d/
 
 `ade20k/` is used for semantic segmentation. `coco/` is used for instance segmentation.
 
+The processed baseline 2D dataset can be downloaded directly from:
+
+```text
+https://drive.google.com/drive/folders/11SJXxFGo206_QetjwQ6Jq0ipWXydevpK?usp=sharing
+```
+
+Place the downloaded folder as:
+
+```text
+M2F-VerSe/dataset_verse_2d/
+```
+
 ## Multi-window processed data
 
 The multi-window method stores its processed data at:
@@ -32,6 +44,18 @@ data/
 ```
 
 This data-level method uses the baseline Mask2Former source and changes only the input data representation.
+
+The processed multi-window 2D dataset can be downloaded directly from:
+
+```text
+https://drive.google.com/drive/folders/1GQmchc43gj_R2v9uxOB_Jn7ri7SglpuA?usp=sharing
+```
+
+Place the downloaded folder as:
+
+```text
+M2F-VerSe/data/multi_window/
+```
 
 ## Preprocessing notebooks
 

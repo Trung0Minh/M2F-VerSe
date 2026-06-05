@@ -116,7 +116,7 @@ See `envs/README.md` for source installation notes and CUDA compatibility detail
 
 Download links and local placement rules are documented in:
 
-- `docs/DATA_PREPARATION.md` for raw and processed VerSe data;
+- `docs/DATA_PREPARATION.md` for processed VerSe 2D data downloads and optional raw-data preprocessing;
 - `docs/CHECKPOINTS.md` for trained checkpoints and pretrained initialization weights.
 
 Expected local folders:
