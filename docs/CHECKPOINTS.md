@@ -17,16 +17,17 @@ https://drive.google.com/drive/folders/164nNROVaBk_HRVv6yU_HrNjJQzrw1Vhd?usp=sha
 After downloading, place checkpoints under a local `weights/checkpoints/` folder using this layout:
 
 ```text
-weights/checkpoints/
-  baseline/
-  focal_loss/
-  elastic_augmentation/
-  focal_elastic/
-  two_point_five_d_input/
-  multi_window/
-  external_comparison/
-    semantic/
-    instance/
+weights/
+└── checkpoints/
+    ├── baseline/
+    ├── focal_loss/
+    ├── elastic_augmentation/
+    ├── focal_elastic/
+    ├── two_point_five_d_input/
+    ├── multi_window/
+    └── external_comparison/
+        ├── semantic/
+        └── instance/
 ```
 
 ## Mask2Former checkpoint naming
@@ -77,20 +78,21 @@ The folder is organized by model:
 
 ```text
 M2F-VerSe-pretrained-weights/
-  Mask2Former/
-  DeepLabV3Plus/
-  UPerNet/
-  MaskRCNN/
-  QueryInst/
-  MaskDINO/
+├── Mask2Former/
+├── DeepLabV3Plus/
+├── UPerNet/
+├── MaskRCNN/
+├── QueryInst/
+└── MaskDINO/
 ```
 
 MaskDINO includes both official checkpoints used for comparison setup:
 
 ```text
-M2F-VerSe-pretrained-weights/MaskDINO/
-  maskdino_r50_50ep_100q_celoss_hid1024_3s_semantic_ade20k_48.7miou.pth
-  maskdino_r50_50ep_300q_hid2048_3sd1_instance_maskenhanced_mask46.3ap_box51.7ap.pth
+M2F-VerSe-pretrained-weights/
+└── MaskDINO/
+    ├── maskdino_r50_50ep_100q_celoss_hid1024_3s_semantic_ade20k_48.7miou.pth
+    └── maskdino_r50_50ep_300q_hid2048_3sd1_instance_maskenhanced_mask46.3ap_box51.7ap.pth
 ```
 
 Mask2Former configs expect ADE20K or COCO initialization weights under each method source folder, for example:

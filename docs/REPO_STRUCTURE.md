@@ -5,24 +5,25 @@ This repository separates project code by purpose so a reviewer can run evaluati
 ## Main folders
 
 ```text
-source/
-  Mask2Former-baseline/              Baseline Mask2Former source
-  Mask2Former-focal-loss/            Mask2Former with focal loss
-  Mask2Former-elastic-enhancement/   Mask2Former with elastic augmentation
-  Mask2Former-focal-elastic/         Mask2Former with focal loss + elastic augmentation
-  Mask2Former-2p5-input/             Mask2Former with 2.5D adjacent-slice input
-
-configs_for_external_comparison/
-  semantic/                          VerSe configs for DeepLabV3+ and UPerNet
-  instance/                          VerSe configs for Mask R-CNN, QueryInst, and MaskDINO
-
-notebooks/
-  preprocessing/                     VerSe 2D preprocessing notebooks and sample case
-  kaggle/                            Multi-seed Kaggle training notebooks
-
-envs/                                Conda environment files for local setup
-evaluation/                          Evaluation and qualitative visualization scripts
-docs/                                Local setup, checkpoint, and notebook guides
+M2F-VerSe/
+├── source/                                      # Self-contained Mask2Former source variants.
+│   ├── Mask2Former-baseline/                    # Baseline Mask2Former source.
+│   ├── Mask2Former-focal-loss/                  # Mask2Former with Focal Loss.
+│   ├── Mask2Former-elastic-enhancement/         # Mask2Former with elastic augmentation.
+│   ├── Mask2Former-focal-elastic/               # Mask2Former with Focal Loss + elastic augmentation.
+│   └── Mask2Former-2p5-input/                   # Mask2Former with 2.5D adjacent-slice input.
+│
+├── configs_for_external_comparison/             # VerSe configs for external model repositories.
+│   ├── semantic/                                # DeepLabV3+, UPerNet, and MaskDINO semantic configs.
+│   └── instance/                                # Mask R-CNN, QueryInst, and MaskDINO instance configs.
+│
+├── notebooks/                                   # Preprocessing and Kaggle training notebooks.
+│   ├── preprocessing/                           # VerSe 2D preprocessing notebooks and sample case.
+│   └── kaggle/                                  # Multi-seed Kaggle training notebooks.
+│
+├── envs/                                        # Conda environment files for local setup.
+├── evaluation/                                  # Evaluation and qualitative visualization scripts.
+└── docs/                                        # Local setup, checkpoint, and notebook guides.
 ```
 
 ## Source policy
@@ -36,8 +37,9 @@ External comparison model sources are not included in this repository. Use the o
 Processed datasets are generated locally and are not committed:
 
 ```text
-dataset_verse_2d/                    Baseline processed VerSe 2D data
-data/multi_window/                   Multi-window processed VerSe 2D data
+M2F-VerSe/
+├── dataset_verse_2d/                            # Baseline processed VerSe 2D data.
+└── data/multi_window/                           # Multi-window processed VerSe 2D data.
 ```
 
 ## Generated files

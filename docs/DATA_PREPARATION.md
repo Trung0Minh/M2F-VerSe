@@ -8,14 +8,14 @@ Baseline processed data is expected at:
 
 ```text
 dataset_verse_2d/
-  ade20k/
-    train/
-    val/
-    test/
-  coco/
-    train/
-    val/
-    test/
+├── ade20k/
+│   ├── train/
+│   ├── val/
+│   └── test/
+└── coco/
+    ├── train/
+    ├── val/
+    └── test/
 ```
 
 `ade20k/` is used for semantic segmentation. `coco/` is used for instance segmentation.
@@ -25,9 +25,10 @@ dataset_verse_2d/
 The multi-window method stores its processed data at:
 
 ```text
-data/multi_window/
-  ade20k/
-  coco/
+data/
+└── multi_window/
+    ├── ade20k/
+    └── coco/
 ```
 
 This data-level method uses the baseline Mask2Former source and changes only the input data representation.
@@ -37,15 +38,19 @@ This data-level method uses the baseline Mask2Former source and changes only the
 Use:
 
 ```text
-notebooks/preprocessing/process_verse_2d.ipynb
-notebooks/preprocessing/process_verse_2d_multiwindow.ipynb
+notebooks/
+└── preprocessing/
+    ├── process_verse_2d.ipynb
+    └── process_verse_2d_multiwindow.ipynb
 ```
 
 The preprocessing folder also contains:
 
 ```text
-notebooks/preprocessing/data_utilities.py
-notebooks/preprocessing/sample/
+notebooks/
+└── preprocessing/
+    ├── data_utilities.py
+    └── sample/
 ```
 
 The sample case is included so the preprocessing pipeline can be checked quickly without processing the full dataset.

@@ -123,12 +123,13 @@ Download links and local placement rules are documented in:
 Expected local folders:
 
 ```text
-dataset_verse_2d/
-  ade20k/                         # Semantic segmentation data
-  coco/                           # Instance segmentation data
-
-weights/
-  checkpoints/                    # Trained model_final checkpoints
+M2F-VerSe/
+├── dataset_verse_2d/
+│   ├── ade20k/                    # Semantic segmentation data.
+│   └── coco/                      # Instance segmentation data.
+│
+└── weights/
+    └── checkpoints/               # Trained model_final checkpoints.
 ```
 
 ### 3. Compile Mask2Former CUDA Operators
@@ -164,12 +165,13 @@ For all evaluation commands, including instance segmentation and external models
 The report studies the following selected methods:
 
 ```text
-Baseline                  source/Mask2Former-baseline/
-Focal loss                source/Mask2Former-focal-loss/
-Elastic augmentation      source/Mask2Former-elastic-enhancement/
-Focal + elastic           source/Mask2Former-focal-elastic/
-2.5D adjacent input       source/Mask2Former-2p5-input/
-Multi-window input        baseline source + multi-window processed data
+M2F-VerSe/
+├── source/Mask2Former-baseline/                 # Baseline.
+├── source/Mask2Former-focal-loss/               # Focal Loss.
+├── source/Mask2Former-elastic-enhancement/      # Elastic augmentation.
+├── source/Mask2Former-focal-elastic/            # Focal Loss + elastic augmentation.
+├── source/Mask2Former-2p5-input/                # 2.5D adjacent-slice input.
+└── data/multi_window/                           # Multi-window input data used with baseline source.
 ```
 
 The multi-window method changes the data representation, not the Mask2Former source code.
@@ -179,15 +181,9 @@ The multi-window method changes the data representation, not the Mask2Former sou
 External model source code is intentionally excluded for repository size and licensing clarity. Use the official repositories, then apply the configs in `configs_for_external_comparison/`.
 
 ```text
-Semantic comparison:
-  DeepLabV3+
-  UPerNet
-  MaskDINO semantic
-
-Instance comparison:
-  Mask R-CNN
-  QueryInst
-  MaskDINO instance
+External comparison models:
+├── semantic/                       # DeepLabV3+, UPerNet, MaskDINO semantic.
+└── instance/                       # Mask R-CNN, QueryInst, MaskDINO instance.
 ```
 
 ## Kaggle Training Notebooks

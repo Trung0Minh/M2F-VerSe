@@ -2,9 +2,9 @@
 
 This project uses two local Conda environments.
 
-## `tgmt`
+## `verse_detectron2`
 
-Use `tgmt` for Mask2Former-based methods:
+Use `verse_detectron2` for Mask2Former-based methods:
 
 - baseline Mask2Former;
 - focal loss;
@@ -16,8 +16,8 @@ Use `tgmt` for Mask2Former-based methods:
 Create it with:
 
 ```bash
-conda env create -f envs/tgmt.yml
-conda activate tgmt
+conda env create -f envs/verse_detectron2.yml
+conda activate verse_detectron2
 ```
 
 The YAML installs and pins the CUDA 12.4 compiler/runtime headers and CUDA math library headers from `nvidia/label/cuda-12.4.1`. This is required even when PyTorch itself can see the GPU, because Detectron2 and Mask2Former compile custom CUDA/C++ operators during setup. Keep these CUDA 12.4 pins together; allowing newer CUDA subpackages can move the Thrust headers or omit headers such as `cusparse.h`, breaking extension builds.
@@ -41,9 +41,9 @@ sh make.sh
 
 Repeat the same compile step for other self-contained Mask2Former variants if you run them directly.
 
-## `verse_mm`
+## `verse_openmmlab`
 
-Use `verse_mm` for external OpenMMLab comparison models:
+Use `verse_openmmlab` for external OpenMMLab comparison models:
 
 - DeepLabV3+;
 - UPerNet;
@@ -53,8 +53,8 @@ Use `verse_mm` for external OpenMMLab comparison models:
 Create it with:
 
 ```bash
-conda env create -f envs/verse_mm.yml
-conda activate verse_mm
+conda env create -f envs/verse_openmmlab.yml
+conda activate verse_openmmlab
 ```
 
 Install the OpenMMLab CUDA extension package after PyTorch is already available:

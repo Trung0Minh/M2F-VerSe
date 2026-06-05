@@ -6,9 +6,9 @@ Download trained checkpoints from the trained-checkpoint Drive folder in `docs/C
 
 ## Environments
 
-Use the `tgmt` Conda environment for Mask2Former-based methods.
+Use the `verse_detectron2` Conda environment for Mask2Former-based methods.
 
-Use the `verse_mm` Conda environment for OpenMMLab comparison models such as DeepLabV3+, UPerNet, Mask R-CNN, and QueryInst.
+Use the `verse_openmmlab` Conda environment for OpenMMLab comparison models such as DeepLabV3+, UPerNet, Mask R-CNN, and QueryInst.
 
 ## Mask2Former evaluation
 
@@ -18,7 +18,7 @@ Semantic R50 example:
 
 ```bash
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n tgmt python -u evaluate_verse_metrics.py \
+conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
   --weights ../../weights/checkpoints/baseline/semantic_R50_model_final.pth \
@@ -31,7 +31,7 @@ Instance R50 example:
 
 ```bash
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n tgmt python -u evaluate_verse_metrics.py \
+conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task instance \
   --config-file configs/verse/verse_coco_instance_R50.yaml \
   --weights ../../weights/checkpoints/baseline/instance_R50_model_final.pth \
@@ -54,17 +54,18 @@ instance_SwinT_model_final.pth
 Use the same command pattern with a different source folder and checkpoint folder:
 
 ```text
-source/Mask2Former-focal-loss              weights/checkpoints/focal_loss
-source/Mask2Former-elastic-enhancement     weights/checkpoints/elastic_augmentation
-source/Mask2Former-focal-elastic           weights/checkpoints/focal_elastic
-source/Mask2Former-2p5-input               weights/checkpoints/two_point_five_d_input
+M2F-VerSe/
+├── source/Mask2Former-focal-loss/              # weights/checkpoints/focal_loss/
+├── source/Mask2Former-elastic-enhancement/     # weights/checkpoints/elastic_augmentation/
+├── source/Mask2Former-focal-elastic/           # weights/checkpoints/focal_elastic/
+└── source/Mask2Former-2p5-input/               # weights/checkpoints/two_point_five_d_input/
 ```
 
 For multi-window, use the baseline source with multi-window data:
 
 ```bash
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n tgmt python -u evaluate_verse_metrics.py \
+conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
   --weights ../../weights/checkpoints/multi_window/semantic_R50_model_final.pth \
@@ -88,7 +89,7 @@ Some external configs contain relative `_base_` paths. If the external framework
 DeepLabV3+ example:
 
 ```bash
-conda run --no-capture-output -n verse_mm python -u evaluation/evaluate_openmmlab_verse_metrics.py \
+conda run --no-capture-output -n verse_openmmlab python -u evaluation/evaluate_openmmlab_verse_metrics.py \
   --task semantic \
   --config-file configs_for_external_comparison/semantic/deeplabv3plus_r50_verse.py \
   --checkpoint weights/checkpoints/external_comparison/semantic/deeplabv3plus_r50.pth \
@@ -101,7 +102,7 @@ conda run --no-capture-output -n verse_mm python -u evaluation/evaluate_openmmla
 Mask R-CNN example:
 
 ```bash
-conda run --no-capture-output -n verse_mm python -u evaluation/evaluate_openmmlab_verse_metrics.py \
+conda run --no-capture-output -n verse_openmmlab python -u evaluation/evaluate_openmmlab_verse_metrics.py \
   --task instance \
   --config-file configs_for_external_comparison/instance/mask-rcnn_r50_verse.py \
   --checkpoint weights/checkpoints/external_comparison/instance/mask_rcnn_r50.pth \

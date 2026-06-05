@@ -3,8 +3,10 @@
 The notebooks in `notebooks/kaggle/` are for reproducing multi-seed training on Kaggle.
 
 ```text
-notebooks/kaggle/semantic_multiseed_runner.ipynb
-notebooks/kaggle/instance_multiseed_runner.ipynb
+notebooks/
+└── kaggle/
+    ├── semantic_multiseed_runner.ipynb
+    └── instance_multiseed_runner.ipynb
 ```
 
 They are not required for local inference verification.
@@ -23,12 +25,13 @@ The source path in the notebook config cell should point to the method being tes
 Example method/source mapping:
 
 ```text
-baseline                  source/Mask2Former-baseline
-focal_loss                source/Mask2Former-focal-loss
-elastic_augmentation      source/Mask2Former-elastic-enhancement
-focal_elastic             source/Mask2Former-focal-elastic
-two_point_five_d_input    source/Mask2Former-2p5-input
-multi_window              source/Mask2Former-baseline with multi-window data
+M2F-VerSe/
+├── source/Mask2Former-baseline/                 # baseline
+├── source/Mask2Former-focal-loss/               # focal_loss
+├── source/Mask2Former-elastic-enhancement/      # elastic_augmentation
+├── source/Mask2Former-focal-elastic/            # focal_elastic
+├── source/Mask2Former-2p5-input/                # two_point_five_d_input
+└── data/multi_window/                           # multi_window data used with baseline source
 ```
 
 ## Multi-seed setup
