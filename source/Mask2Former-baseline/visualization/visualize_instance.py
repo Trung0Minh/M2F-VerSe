@@ -12,8 +12,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
-from detectron2.data import MetadataCatalog
-from detectron2.utils.visualizer import Visualizer, ColorMode
 from detectron2.projects.deeplab import add_deeplab_config
 from mask2former import add_maskformer2_config
 
@@ -51,7 +49,6 @@ if __name__ == "__main__":
 
     print(f"Loading instance model with weights: {cfg.MODEL.WEIGHTS}")
     predictor = DefaultPredictor(cfg)
-    metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0] if cfg.DATASETS.TEST else "verse_instance_test")
 
     # 2. Pick a sample
     if args.input:
@@ -76,23 +73,15 @@ if __name__ == "__main__":
     keep = instances.scores > args.conf_threshold
     instances = instances[keep]
 
-    # --- VISUALIZATION LOGIC ---
-    v = Visualizer(img_rgb, metadata=metadata, scale=1.0, instance_mode=ColorMode.SEGMENTATION)
-
-    if not instances.has("pred_boxes") or len(instances.pred_boxes) == 0:
-        from detectron2.structures import Boxes
-        masks = instances.pred_masks.numpy()
-        boxes = []
-        for mask in masks:
-            y, x = np.where(mask)
-            if len(x) > 0 and len(y) > 0:
-                boxes.append([np.min(x), np.min(y), np.max(x), np.max(y)])
-            else:
-                boxes.append([0, 0, 0, 0])
-        instances.pred_boxes = Boxes(torch.tensor(boxes))
-
-    out_pred = v.draw_instance_predictions(instances)
-    pred_img = out_pred.get_image()
+    # Render masks without class text labels so the demo focuses on segmentation quality.
+    pred_img = img_rgb.copy().astype(np.float32)
+    cmap = plt.get_cmap("tab20")
+    for idx, mask in enumerate(instances.pred_masks.numpy()):
+        mask = mask.astype(bool)
+        color = np.array(cmap(idx % 20)[:3]) * 255.0
+        alpha = 0.55
+        pred_img[mask] = (1.0 - alpha) * pred_img[mask] + alpha * color
+    pred_img = pred_img.astype(np.uint8)
 
     # 5. Load Ground Truth
     has_gt = os.path.exists(gt_path)
@@ -116,17 +105,6 @@ if __name__ == "__main__":
 
     pred_ax.imshow(pred_img)
     pred_ax.set_title("Model Predictions", fontsize=15)
-
-    # MANUAL LABELS
-    for i in range(len(instances)):
-        mask = instances.pred_masks[i].numpy()
-        y, x = np.where(mask)
-        if len(x) > 0:
-            cx, cy = np.mean(x), np.mean(y)
-            label = metadata.thing_classes[instances.pred_classes[i]]
-            pred_ax.text(cx, cy, label, color='white', fontsize=11, fontweight='bold',
-                      bbox=dict(facecolor='black', alpha=0.5, pad=1, edgecolor='none'),
-                      ha='center', va='center')
 
     for a in ax: a.axis('off')
     plt.tight_layout()

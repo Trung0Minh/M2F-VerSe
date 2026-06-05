@@ -10,6 +10,8 @@ Use the `verse_detectron2` Conda environment for Mask2Former-based methods.
 
 Use the `verse_openmmlab` Conda environment for OpenMMLab comparison models such as DeepLabV3+, UPerNet, Mask R-CNN, and QueryInst.
 
+Activate the matching environment before running the commands. This is preferred over wrapping commands with `conda run`, because CUDA/NVML availability can be inconsistent on some systems when long GPU scripts are launched through `conda run`.
+
 ## Mask2Former evaluation
 
 Run commands from the method source folder.
@@ -17,8 +19,9 @@ Run commands from the method source folder.
 Semantic R50 example:
 
 ```bash
+conda activate verse_detectron2
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
+python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
   --weights ../../weights/baseline/semantic_R50_model_final.pth \
@@ -30,8 +33,9 @@ conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metri
 Instance R50 example:
 
 ```bash
+conda activate verse_detectron2
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
+python -u evaluate_verse_metrics.py \
   --task instance \
   --config-file configs/verse/verse_coco_instance_R50.yaml \
   --weights ../../weights/baseline/instance_R50_model_final.pth \
@@ -58,17 +62,18 @@ M2F-VerSe/
 ├── source/Mask2Former-focal-loss/              # weights/focal_loss/
 ├── source/Mask2Former-elastic-enhancement/     # weights/elastic_augmentation/
 ├── source/Mask2Former-focal-elastic/           # weights/focal_elastic/
-└── source/Mask2Former-2p5-input/               # weights/two_point_five_d_input/
+└── source/Mask2Former-2p5-input/               # weights/2p5d_input/
 ```
 
 For multi-window, use the baseline source with multi-window data:
 
 ```bash
+conda activate verse_detectron2
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
+python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
-  --weights ../../weights/multi_window/semantic_R50_model_final.pth \
+  --weights ../../weights/multiwindow/semantic_R50_model_final.pth \
   --verse-root ../../data/multi_window/ade20k \
   --split test \
   --output-dir output/eval_multi_window_semantic_R50
@@ -89,10 +94,11 @@ Some external configs contain relative `_base_` paths. If the external framework
 DeepLabV3+ example:
 
 ```bash
-conda run --no-capture-output -n verse_openmmlab python -u evaluation/evaluate_openmmlab_verse_metrics.py \
+conda activate verse_openmmlab
+python -u evaluation/evaluate_openmmlab_verse_metrics.py \
   --task semantic \
   --config-file configs_for_external_comparison/semantic/deeplabv3plus_r50_verse.py \
-  --checkpoint weights/external_comparison/semantic/deeplabv3plus_r50.pth \
+  --checkpoint weights/comparison_models/semantic/deeplabv3plus_R50_iter_20000.pth \
   --verse-root dataset_verse_2d/ade20k \
   --split test \
   --output-dir output/eval_semantic_deeplabv3plus_r50 \
@@ -102,10 +108,11 @@ conda run --no-capture-output -n verse_openmmlab python -u evaluation/evaluate_o
 Mask R-CNN example:
 
 ```bash
-conda run --no-capture-output -n verse_openmmlab python -u evaluation/evaluate_openmmlab_verse_metrics.py \
+conda activate verse_openmmlab
+python -u evaluation/evaluate_openmmlab_verse_metrics.py \
   --task instance \
   --config-file configs_for_external_comparison/instance/mask-rcnn_r50_verse.py \
-  --checkpoint weights/external_comparison/instance/mask_rcnn_r50.pth \
+  --checkpoint weights/comparison_models/instance/mask_rcnn_R50_iter_20000.pth \
   --verse-root dataset_verse_2d/coco \
   --split test \
   --output-dir output/eval_instance_mask_rcnn_r50 \

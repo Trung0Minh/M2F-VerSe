@@ -14,12 +14,14 @@ This repository does not include external model source trees such as MMDetection
 
 ## Detailed Guides
 
-- [Repository structure](docs/REPO_STRUCTURE.md) # What each folder contains and what source code is intentionally excluded.
-- [Data preparation](docs/DATA_PREPARATION.md) # How raw VerSe data is converted into the 2D semantic, instance, and multi-window datasets.
-- [Checkpoints and weights](docs/CHECKPOINTS.md) # Drive links and expected local placement for pretrained weights and trained checkpoints.
-- [Run inference](docs/RUN_INFERENCE.md) # Commands for reproducing metrics from downloaded checkpoints.
-- [Kaggle training notebooks](docs/KAGGLE_TRAINING_NOTEBOOKS.md) # How the multi-seed Kaggle Save-Version notebooks were used.
-- [Environment setup](envs/README.md) # Which Conda environment to use for Mask2Former and OpenMMLab models.
+Recommended reading order for local verification:
+
+1. [Environment setup](envs/README.md) # Create Conda environments and run required post-install steps.
+2. [Checkpoints and weights](docs/CHECKPOINTS.md) # Download trained checkpoints and place them under `weights/`.
+3. [Data preparation](docs/DATA_PREPARATION.md) # Understand the expected processed VerSe 2D dataset layout.
+4. [Run inference](docs/RUN_INFERENCE.md) # Reproduce metrics from downloaded checkpoints.
+5. [Repository structure](docs/REPO_STRUCTURE.md) # Understand what each folder contains and what source code is intentionally excluded.
+6. [Kaggle training notebooks](docs/KAGGLE_TRAINING_NOTEBOOKS.md) # Optional: reproduce multi-seed training with Kaggle Save Version.
 
 ## Acknowledgements and Citations
 
@@ -44,7 +46,6 @@ The baseline architecture, training framework, and Detectron2-style implementati
 ```text
 M2F-VerSe/
 ├── README.md                                      # Main reviewer-facing guide and entry point.
-├── requirements.txt                              # Shared package pins for the Mask2Former-side setup.
 │
 ├── envs/                                         # Conda environment definitions.
 │   ├── README.md                                 # Which environment to use for each model family.
@@ -131,14 +132,14 @@ M2F-VerSe/
     ├── focal_loss/                # Trained Focal Loss checkpoints.
     ├── elastic_augmentation/      # Trained elastic augmentation checkpoints.
     ├── focal_elastic/             # Trained Focal Loss + elastic checkpoints.
-    ├── two_point_five_d_input/    # Trained 2.5D input checkpoints.
-    ├── multi_window/              # Trained multi-window checkpoints.
-    └── external_comparison/       # Trained external-model checkpoints.
+    ├── 2p5d_input/                # Trained 2.5D input checkpoints.
+    ├── multiwindow/               # Trained multi-window checkpoints.
+    └── comparison_models/         # Trained external-model checkpoints.
 ```
 
 ### 3. Compile Mask2Former CUDA Operators
 
-Before running Mask2Former inference or training, compile the custom multi-scale deformable attention operators inside the source folder being used:
+Before running Mask2Former inference or training, first follow the Detectron2 post-install step in `envs/README.md`. Then compile the custom multi-scale deformable attention operators inside the source folder being used:
 
 ```bash
 cd source/Mask2Former-baseline/mask2former/modeling/pixel_decoder/ops
@@ -147,13 +148,18 @@ sh make.sh
 
 Repeat for other source variants if running them directly.
 
+### 4. Run Local Inference
+
+After the environment, data, checkpoints, and CUDA operators are ready, run the commands in `docs/RUN_INFERENCE.md`.
+
 ## Local Inference Example
 
 For Mask2Former-based methods, run from the selected source folder:
 
 ```bash
+conda activate verse_detectron2
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
+python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
   --weights ../../weights/baseline/semantic_R50_model_final.pth \
@@ -189,6 +195,8 @@ External comparison models:
 ├── semantic/                       # DeepLabV3+, UPerNet, MaskDINO semantic.
 └── instance/                       # Mask R-CNN, QueryInst, MaskDINO instance.
 ```
+
+MaskDINO is also treated as an external repository. Use its official source tree together with the VerSe configs in `configs_for_external_comparison/`.
 
 ## Kaggle Training Notebooks
 

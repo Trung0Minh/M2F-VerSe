@@ -22,9 +22,9 @@ weights/
 ├── focal_loss/
 ├── elastic_augmentation/
 ├── focal_elastic/
-├── two_point_five_d_input/
-├── multi_window/
-└── external_comparison/
+├── 2p5d_input/
+├── multiwindow/
+└── comparison_models/
     ├── semantic/
     └── instance/
 ```
@@ -44,7 +44,7 @@ Example:
 
 ```text
 weights/focal_elastic/semantic_R50_model_final.pth
-weights/multi_window/instance_SwinT_model_final.pth
+weights/multiwindow/instance_SwinT_model_final.pth
 ```
 
 ## External comparison checkpoints
@@ -52,11 +52,12 @@ weights/multi_window/instance_SwinT_model_final.pth
 Use these suggested locations:
 
 ```text
-weights/external_comparison/semantic/deeplabv3plus_r50.pth
-weights/external_comparison/semantic/upernet_r50.pth
-weights/external_comparison/instance/mask_rcnn_r50.pth
-weights/external_comparison/instance/queryinst_r50.pth
-weights/external_comparison/instance/maskdino_r50.pth
+weights/comparison_models/semantic/deeplabv3plus_R50_iter_20000.pth
+weights/comparison_models/semantic/upernet_R50_iter_20000.pth
+weights/comparison_models/semantic/maskdino_R50_model_final.pth
+weights/comparison_models/instance/mask_rcnn_R50_iter_20000.pth
+weights/comparison_models/instance/queryinst_R50_iter_20000.pth
+weights/comparison_models/instance/maskdino_R50_model_final.pth
 ```
 
 ## Pretrained initialization weights

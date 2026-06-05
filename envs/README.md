@@ -49,6 +49,7 @@ Use `verse_openmmlab` for external OpenMMLab comparison models:
 - UPerNet;
 - Mask R-CNN;
 - QueryInst.
+- MaskDINO.
 
 Create it with:
 
@@ -91,6 +92,8 @@ The two-line compatibility patch matches the source trees used for the reported 
 The `--no-deps` flag is intentional because the required runtime packages are already pinned in `envs/verse_openmmlab.yml`; letting pip resolve dependencies again can pull incompatible packages or require internet access during editable installation.
 
 The VerSe-specific configs for these models are in `configs_for_external_comparison/`.
+
+MaskDINO is also treated as an external source tree. Use the official MaskDINO repository and the VerSe configs in `configs_for_external_comparison/semantic/maskdino_R50_semantic_verse.yaml` and `configs_for_external_comparison/instance/maskdino_R50_instance_verse.yaml`.
 
 ## CUDA Note
 
