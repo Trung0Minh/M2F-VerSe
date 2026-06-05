@@ -1,6 +1,6 @@
 
 _base_ = [
-    '../upernet/upernet_r50_4xb4-160k_ade20k-512x512.py'
+    '../../semantic/mmsegmentation/configs/upernet/upernet_r50_4xb4-160k_ade20k-512x512.py'
 ]
 
 model = dict(

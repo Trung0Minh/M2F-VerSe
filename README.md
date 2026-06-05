@@ -14,6 +14,15 @@ Large datasets, pretrained initialization weights, and trained checkpoints are n
 
 This repository does not include external model source trees such as MMDetection, MMSegmentation, or MaskDINO. Those are used from their official repositories.
 
+## Detailed Guides
+
+- [Repository structure](docs/REPO_STRUCTURE.md) # What each folder contains and what source code is intentionally excluded.
+- [Data preparation](docs/DATA_PREPARATION.md) # How raw VerSe data is converted into the 2D semantic, instance, and multi-window datasets.
+- [Checkpoints and weights](docs/CHECKPOINTS.md) # Drive links and expected local placement for pretrained weights and trained checkpoints.
+- [Run inference](docs/RUN_INFERENCE.md) # Commands for reproducing metrics from downloaded checkpoints.
+- [Kaggle training notebooks](docs/KAGGLE_TRAINING_NOTEBOOKS.md) # How the multi-seed Kaggle Save-Version notebooks were used.
+- [Environment setup](envs/README.md) # Which Conda environment to use for Mask2Former and OpenMMLab models.
+
 ## Acknowledgements and Citations
 
 This project is a refactoring and adaptation built mainly from two upstream works.

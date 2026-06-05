@@ -1,6 +1,6 @@
 
 _base_ = [
-    '../deeplabv3plus/deeplabv3plus_r50-d8_4xb4-160k_ade20k-512x512.py'
+    '../../semantic/mmsegmentation/configs/deeplabv3plus/deeplabv3plus_r50-d8_4xb4-160k_ade20k-512x512.py'
 ]
 
 model = dict(

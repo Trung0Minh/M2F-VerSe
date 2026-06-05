@@ -6,9 +6,17 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+
+# MMEngine 0.10.x still calls torch.load without weights_only=False. PyTorch
+# 2.6 changed the default to weights_only=True, which rejects full MMEngine
+# checkpoints containing optimizer/logger metadata. These checkpoints are local
+# artifacts produced by this project, so force the legacy trusted-checkpoint
+# behavior for this evaluation entrypoint only.
+os.environ.setdefault("TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD", "1")
 
 import numpy as np
 from PIL import Image
