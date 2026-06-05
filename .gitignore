@@ -62,7 +62,7 @@ db.sqlite3
 db.sqlite3-journal
 
 # Flask stuff:
-instance/
+/instance/
 .webassets-cache
 
 # Scrapy stuff:
@@ -146,6 +146,8 @@ dmypy.json
 
 data/
 dataset_verse_2d/
+semantic/
+Report\ TGMT/
 
 # Model weights, checkpoints, and generated inference/training artifacts
 *.pth

@@ -50,8 +50,8 @@ M2F-VerSe/
 │
 ├── envs/                                         # Conda environment definitions.
 │   ├── README.md                                 # Which environment to use for each model family.
-│   ├── tgmt.yml                                  # Detectron2/Mask2Former environment.
-│   └── verse_mm.yml                              # OpenMMLab environment for comparison models.
+│   ├── verse_detectron2.yml                      # Detectron2/Mask2Former environment.
+│   └── verse_openmmlab.yml                       # OpenMMLab environment for comparison models.
 │
 ├── source/                                       # Self-contained Mask2Former source variants.
 │   ├── Mask2Former-baseline/                     # Baseline adapted to VerSe semantic/instance tasks.
@@ -97,18 +97,18 @@ M2F-VerSe/
 
 ### 1. Create Conda Environments
 
-Use `tgmt` for all Mask2Former-based methods:
+Use `verse_detectron2` for all Detectron2 ecosystem methods:
 
 ```bash
-conda env create -f envs/tgmt.yml
-conda activate tgmt
+conda env create -f envs/verse_detectron2.yml
+conda activate verse_detectron2
 ```
 
-Use `verse_mm` for external OpenMMLab comparison models:
+Use `verse_openmmlab` for external OpenMMLab comparison models:
 
 ```bash
-conda env create -f envs/verse_mm.yml
-conda activate verse_mm
+conda env create -f envs/verse_openmmlab.yml
+conda activate verse_openmmlab
 ```
 
 See `envs/README.md` for source installation notes and CUDA compatibility details.
@@ -148,7 +148,7 @@ For Mask2Former-based methods, run from the selected source folder:
 
 ```bash
 cd source/Mask2Former-baseline
-conda run --no-capture-output -n tgmt python -u evaluate_verse_metrics.py \
+conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
   --weights ../../weights/checkpoints/baseline/semantic_R50_model_final.pth \
