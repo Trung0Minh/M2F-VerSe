@@ -26,7 +26,7 @@ It also pins `libstdcxx-ng` from conda-forge so Detectron2's compiled `_C` exten
 Then install Detectron2 after PyTorch is already available in the environment:
 
 ```bash
-pip install --no-build-isolation \
+python -m pip install --no-build-isolation \
   "git+https://github.com/facebookresearch/detectron2.git@b599f139756bd3646a26a909caf86a1a159e53a7"
 ```
 
@@ -60,8 +60,8 @@ conda activate verse_openmmlab
 Install the OpenMMLab CUDA extension package after PyTorch is already available:
 
 ```bash
-pip install "setuptools==69.5.1"
-pip install --no-build-isolation "mmcv==2.2.0"
+python -m pip install "setuptools==69.5.1"
+python -m pip install --no-build-isolation "mmcv==2.2.0"
 ```
 
 This separate step avoids pip building `mmcv` before PyTorch and CUDA headers are visible. The reported experiments used `mmcv==2.2.0`, `mmengine==0.10.7`, `mmdet==3.3.0`, and `mmsegmentation==1.2.2`.
@@ -83,11 +83,12 @@ for path, old, new in patches:
         path.write_text(text.replace(old, new))
 PY
 
-pip install -e semantic/mmsegmentation
-pip install --no-build-isolation -e instance/mmdetection
+python -m pip install --no-build-isolation --no-deps -e semantic/mmsegmentation
+python -m pip install --no-build-isolation --no-deps -e instance/mmdetection
 ```
 
 The two-line compatibility patch matches the source trees used for the reported experiments. The release tags otherwise reject `mmcv==2.2.0` because their version guards use `<2.2.0`.
+The `--no-deps` flag is intentional because the required runtime packages are already pinned in `envs/verse_openmmlab.yml`; letting pip resolve dependencies again can pull incompatible packages or require internet access during editable installation.
 
 The VerSe-specific configs for these models are in `configs_for_external_comparison/`.
 

@@ -1,8 +1,6 @@
 # M2F-VerSe: Mask2Former on VerSe 2D Vertebrae Segmentation
 
-This repository contains the code used to adapt Mask2Former-style segmentation to the VerSe vertebrae dataset. It includes the Mask2Former variants used in the report, preprocessing notebooks, evaluation scripts, Kaggle multi-seed training notebooks, environment files, and VerSe configs for external comparison models.
-
-Large datasets, pretrained initialization weights, and trained checkpoints are not committed to Git. They are provided through the Drive links documented in `docs/CHECKPOINTS.md` and `docs/DATA_PREPARATION.md`.
+This repository contains the code used to adapt Mask2Former-style segmentation to the VerSe vertebrae dataset.
 
 ## What This Repository Is For
 
@@ -129,7 +127,13 @@ M2F-VerSe/
 │   └── coco/                      # Instance segmentation data.
 │
 └── weights/
-    └── checkpoints/               # Trained model_final checkpoints.
+    ├── baseline/                  # Trained Mask2Former baseline checkpoints.
+    ├── focal_loss/                # Trained Focal Loss checkpoints.
+    ├── elastic_augmentation/      # Trained elastic augmentation checkpoints.
+    ├── focal_elastic/             # Trained Focal Loss + elastic checkpoints.
+    ├── two_point_five_d_input/    # Trained 2.5D input checkpoints.
+    ├── multi_window/              # Trained multi-window checkpoints.
+    └── external_comparison/       # Trained external-model checkpoints.
 ```
 
 ### 3. Compile Mask2Former CUDA Operators
@@ -152,7 +156,7 @@ cd source/Mask2Former-baseline
 conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
-  --weights ../../weights/checkpoints/baseline/semantic_R50_model_final.pth \
+  --weights ../../weights/baseline/semantic_R50_model_final.pth \
   --verse-root ../../dataset_verse_2d/ade20k \
   --split test \
   --output-dir output/eval_semantic_R50

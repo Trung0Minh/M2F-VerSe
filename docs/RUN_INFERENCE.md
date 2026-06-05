@@ -21,7 +21,7 @@ cd source/Mask2Former-baseline
 conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
-  --weights ../../weights/checkpoints/baseline/semantic_R50_model_final.pth \
+  --weights ../../weights/baseline/semantic_R50_model_final.pth \
   --verse-root ../../dataset_verse_2d/ade20k \
   --split test \
   --output-dir output/eval_semantic_R50
@@ -34,7 +34,7 @@ cd source/Mask2Former-baseline
 conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task instance \
   --config-file configs/verse/verse_coco_instance_R50.yaml \
-  --weights ../../weights/checkpoints/baseline/instance_R50_model_final.pth \
+  --weights ../../weights/baseline/instance_R50_model_final.pth \
   --verse-root ../../dataset_verse_2d/coco \
   --split test \
   --output-dir output/eval_instance_R50
@@ -55,10 +55,10 @@ Use the same command pattern with a different source folder and checkpoint folde
 
 ```text
 M2F-VerSe/
-├── source/Mask2Former-focal-loss/              # weights/checkpoints/focal_loss/
-├── source/Mask2Former-elastic-enhancement/     # weights/checkpoints/elastic_augmentation/
-├── source/Mask2Former-focal-elastic/           # weights/checkpoints/focal_elastic/
-└── source/Mask2Former-2p5-input/               # weights/checkpoints/two_point_five_d_input/
+├── source/Mask2Former-focal-loss/              # weights/focal_loss/
+├── source/Mask2Former-elastic-enhancement/     # weights/elastic_augmentation/
+├── source/Mask2Former-focal-elastic/           # weights/focal_elastic/
+└── source/Mask2Former-2p5-input/               # weights/two_point_five_d_input/
 ```
 
 For multi-window, use the baseline source with multi-window data:
@@ -68,7 +68,7 @@ cd source/Mask2Former-baseline
 conda run --no-capture-output -n verse_detectron2 python -u evaluate_verse_metrics.py \
   --task semantic \
   --config-file configs/verse/verse_ade20k_semantic_R50.yaml \
-  --weights ../../weights/checkpoints/multi_window/semantic_R50_model_final.pth \
+  --weights ../../weights/multi_window/semantic_R50_model_final.pth \
   --verse-root ../../data/multi_window/ade20k \
   --split test \
   --output-dir output/eval_multi_window_semantic_R50
@@ -92,7 +92,7 @@ DeepLabV3+ example:
 conda run --no-capture-output -n verse_openmmlab python -u evaluation/evaluate_openmmlab_verse_metrics.py \
   --task semantic \
   --config-file configs_for_external_comparison/semantic/deeplabv3plus_r50_verse.py \
-  --checkpoint weights/checkpoints/external_comparison/semantic/deeplabv3plus_r50.pth \
+  --checkpoint weights/external_comparison/semantic/deeplabv3plus_r50.pth \
   --verse-root dataset_verse_2d/ade20k \
   --split test \
   --output-dir output/eval_semantic_deeplabv3plus_r50 \
@@ -105,7 +105,7 @@ Mask R-CNN example:
 conda run --no-capture-output -n verse_openmmlab python -u evaluation/evaluate_openmmlab_verse_metrics.py \
   --task instance \
   --config-file configs_for_external_comparison/instance/mask-rcnn_r50_verse.py \
-  --checkpoint weights/checkpoints/external_comparison/instance/mask_rcnn_r50.pth \
+  --checkpoint weights/external_comparison/instance/mask_rcnn_r50.pth \
   --verse-root dataset_verse_2d/coco \
   --split test \
   --output-dir output/eval_instance_mask_rcnn_r50 \

@@ -14,20 +14,19 @@ Shared link:
 https://drive.google.com/drive/folders/164nNROVaBk_HRVv6yU_HrNjJQzrw1Vhd?usp=sharing
 ```
 
-After downloading, place checkpoints under a local `weights/checkpoints/` folder using this layout:
+After downloading, place trained checkpoints directly under a local `weights/` folder using this layout:
 
 ```text
 weights/
-└── checkpoints/
-    ├── baseline/
-    ├── focal_loss/
-    ├── elastic_augmentation/
-    ├── focal_elastic/
-    ├── two_point_five_d_input/
-    ├── multi_window/
-    └── external_comparison/
-        ├── semantic/
-        └── instance/
+├── baseline/
+├── focal_loss/
+├── elastic_augmentation/
+├── focal_elastic/
+├── two_point_five_d_input/
+├── multi_window/
+└── external_comparison/
+    ├── semantic/
+    └── instance/
 ```
 
 ## Mask2Former checkpoint naming
@@ -44,8 +43,8 @@ instance_SwinT_model_final.pth
 Example:
 
 ```text
-weights/checkpoints/focal_elastic/semantic_R50_model_final.pth
-weights/checkpoints/multi_window/instance_SwinT_model_final.pth
+weights/focal_elastic/semantic_R50_model_final.pth
+weights/multi_window/instance_SwinT_model_final.pth
 ```
 
 ## External comparison checkpoints
@@ -53,11 +52,11 @@ weights/checkpoints/multi_window/instance_SwinT_model_final.pth
 Use these suggested locations:
 
 ```text
-weights/checkpoints/external_comparison/semantic/deeplabv3plus_r50.pth
-weights/checkpoints/external_comparison/semantic/upernet_r50.pth
-weights/checkpoints/external_comparison/instance/mask_rcnn_r50.pth
-weights/checkpoints/external_comparison/instance/queryinst_r50.pth
-weights/checkpoints/external_comparison/instance/maskdino_r50.pth
+weights/external_comparison/semantic/deeplabv3plus_r50.pth
+weights/external_comparison/semantic/upernet_r50.pth
+weights/external_comparison/instance/mask_rcnn_r50.pth
+weights/external_comparison/instance/queryinst_r50.pth
+weights/external_comparison/instance/maskdino_r50.pth
 ```
 
 ## Pretrained initialization weights
